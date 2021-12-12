@@ -1,2 +1,2 @@
 # PayrollAPI
-GOL Clinci Project
+GOL Clinic Project
