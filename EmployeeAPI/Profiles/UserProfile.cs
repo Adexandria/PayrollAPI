@@ -12,7 +12,7 @@ namespace EmployeeAPI.Profiles
     {
         public UserProfile()
         {
-            CreateMap<Signup, Employee>();
+            CreateMap<Signup, Employee>().ForMember(s=>s.Home_Address,opt=>opt.MapFrom(s=>s.HomeAddress));
             CreateMap<Login, Employee>();
              
         }

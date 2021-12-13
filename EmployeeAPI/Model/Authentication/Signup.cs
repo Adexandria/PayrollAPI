@@ -15,6 +15,9 @@ namespace EmployeeAPI.Model.Authentication
         [Required(ErrorMessage = "Enter Email")]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required(ErrorMessage ="Enter Address")]
+        public string HomeAddress { get; set; }
        
     }
 }
