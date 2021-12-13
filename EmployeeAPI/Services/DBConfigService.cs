@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
-namespace EmployeeAPI.DAO.Implementation
+namespace EmployeeAPI.Services
 {
     public abstract class DBConfigService
     {

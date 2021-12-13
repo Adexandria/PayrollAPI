@@ -7,20 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EmployeeAPI.DAO.Implementation
+namespace EmployeeAPI.Services.EmployeeDOA
 {
-    public class EmployeeDAO : DBConfigService, IEmployeeDAO
+    public class EmployeeRepository : DBConfigService, IEmployee
     {
         IConfiguration configuration;
-        ILogger<EmployeeDAO> logger;
+        ILogger<EmployeeRepository> logger;
 
-        public EmployeeDAO (IConfiguration configuration, ILogger<EmployeeDAO> logger) : base(configuration)
+        public EmployeeRepository (IConfiguration configuration, ILogger<EmployeeRepository> logger) : base(configuration)
         {
             this.configuration = configuration;
             this.logger = logger;
         }
 
-        public async Task<Result<Employee>> AddEmployee(Employee employee)
+        public async Task AddEmployee(Employee employee)
         {
             try
             {
@@ -36,22 +36,16 @@ namespace EmployeeAPI.DAO.Implementation
                     parameter.Add("Return_Val", System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue, size: 1);
                     int dbResult = await conn.ExecuteAsync("dbo.Sp_Add_Employee", parameter, commandType: System.Data.CommandType.StoredProcedure);
 
-                    Result<Employee> result = new Result<Employee>
-                    {
-                        IdentityValue = parameter.Get<Int32>("Id"),
-                        ReturnValue = parameter.Get<Int32>("Return_Val")
-                    };
-                    return result;
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message + ":" + ex.StackTrace, ex);
-                return null;
+                
             }
         }
 
-        public async Task<Result<Employee>> RetrieveEmployeeById(string id)
+        public async Task<Employee> RetrieveEmployeeById(string id)
         {
             try
             {
@@ -60,13 +54,8 @@ namespace EmployeeAPI.DAO.Implementation
                     DynamicParameters parameter = new DynamicParameters();
                     parameter.Add("Employee_ID", id);
                     parameter.Add("Return_Val", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue);
-                    IEnumerable<Employee> Accountes = await conn.QueryAsync<Employee>("[Sp_Retrieve_EmployeeById]", parameter, commandType: System.Data.CommandType.StoredProcedure);
-
-                    Result<Employee> result = new Result<Employee>();
-                    result.Data = Accountes.AsList()[0];
-                    result.ReturnValue = parameter.Get<Int32>("Return_Val");
-
-                    return result;
+                    Employee employee = await conn.QuerySingleAsync<Employee>("[Sp_Retrieve_EmployeeById]", parameter, commandType: System.Data.CommandType.StoredProcedure);
+                    return employee;
                 }
             }
             catch (Exception ex)
@@ -110,7 +99,7 @@ namespace EmployeeAPI.DAO.Implementation
             }
         }
 
-        public async Task<Result<Employee>> UpdateEmployee(Employee employee)
+        public async Task UpdateEmployee(Employee employee)
         {
             try
             {
@@ -123,22 +112,39 @@ namespace EmployeeAPI.DAO.Implementation
                     parameter.Add("Email", employee.Email);
                     parameter.Add("Home Address", employee.Home_Address);
                     parameter.Add("ModifiedBy", employee.Modified_By);
+                    parameter.Add("Password", employee.Password);
                     parameter.Add("Return_Val", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue);
 
-                    int dbData = await conn.ExecuteAsync("Sp_Update_Employee", parameter, commandType: System.Data.CommandType.StoredProcedure);
-                    Result<Employee> result = new Result<Employee>
-                    {
-                        IdentityValue = dbData,
-                        ReturnValue = parameter.Get<Int32>("Return_Val")
-                    };
-                    return result;
+                    await conn.ExecuteAsync("Sp_Update_Employee", parameter, commandType: System.Data.CommandType.StoredProcedure);
                 }                
             }
             catch (Exception ex)
             {
                 logger.LogError(ex.Message + ":" + ex.StackTrace, ex);
-                return null;
+               
             }            
         }
+
+        public async Task<Employee> RetrieveEmployeeByEmail(string email)
+        {
+            try
+            {
+                using (var conn = Connection)
+                {
+                    DynamicParameters parameter = new DynamicParameters();
+                    parameter.Add("Email", email);
+                    parameter.Add("Return_Val", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue);
+                    Employee employee = await conn.QuerySingleAsync<Employee>("[Sp_Retrieve_EmployeeByEmail]", parameter, commandType: System.Data.CommandType.StoredProcedure);
+                    return employee;
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message + ":" + ex.StackTrace, ex);
+                return null;
+            }
+        }
+
+       
     }
 }

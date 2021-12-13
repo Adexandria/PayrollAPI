@@ -4,7 +4,7 @@ namespace EmployeeAPI.Model
 {
     public class Employee
     {
-        public Guid EmployeeID { get; set; }
+        public string EmployeeID { get; set; }
 
         public string First_Name { get; set; }
 
