@@ -7,10 +7,10 @@ namespace EmployeeAPI.Model
 {
     public class Bank
     {
-        public Guid BankId { get; set; }
-        public string BankName { get; set; }
-        public string AccountName { get; set; }
-        public string AccountNo { get; set; }
-        public Guid EmployeeId { get; set; }
+        public Guid BankID { get; set; }
+        public string Bank_Name { get; set; }
+        public string Account_Name { get; set; }
+        public string Account_Number { get; set; }
+        public Guid EmployeeID { get; set; }
     }
 }
