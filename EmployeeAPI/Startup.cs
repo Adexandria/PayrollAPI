@@ -1,5 +1,6 @@
 using EmployeeAPI.Model;
 using EmployeeAPI.Services;
+using EmployeeAPI.Services.AttendanceDOA;
 using EmployeeAPI.Services.EmployeeDOA;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -62,6 +63,7 @@ namespace EmployeeAPI
             services.AddScoped<IEmployee, EmployeeRepository>();
             services.AddScoped<Credentials>();
             services.AddScoped<IPasswordHasher<Employee>, PasswordHasher<Employee>>();
+            services.AddScoped<IAttendance, AttendanceRepository>();
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings

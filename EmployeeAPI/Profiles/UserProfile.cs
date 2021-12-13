@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EmployeeAPI.Model;
 using EmployeeAPI.Model.Authentication;
+using EmployeeAPI.Model.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,8 @@ namespace EmployeeAPI.Profiles
         {
             CreateMap<Signup, Employee>().ForMember(s=>s.Home_Address,opt=>opt.MapFrom(s=>s.HomeAddress));
             CreateMap<Login, Employee>();
-             
+
+            CreateMap<Attendance,AttendanceDTO>();
         }
     }
 }

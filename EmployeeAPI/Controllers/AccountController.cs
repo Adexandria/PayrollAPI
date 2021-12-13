@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EmployeeAPI.Controllers
@@ -134,6 +132,22 @@ namespace EmployeeAPI.Controllers
                 return BadRequest(e.Message);
             }
 
+        }
+
+        [HttpDelete("{id}/delete")]
+        public ActionResult DeleteAccount(string id)
+        {
+            try
+            {
+                var currentUser = _employee.RetrieveEmployeeById(id);
+                if (currentUser == null) return NotFound("username doesn't exist");
+                _employee.DeleteEmployee(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

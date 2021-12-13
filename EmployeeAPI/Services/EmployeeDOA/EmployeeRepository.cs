@@ -35,7 +35,7 @@ namespace EmployeeAPI.Services.EmployeeDOA
                     parameter.Add("Id", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.Output);
                     parameter.Add("Return_Val", System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue, size: 1);
                     int dbResult = await conn.ExecuteAsync("dbo.Sp_Add_Employee", parameter, commandType: System.Data.CommandType.StoredProcedure);
-                    int x = dbResult;
+                  
                 }
             }
             catch (Exception ex)
@@ -145,6 +145,24 @@ namespace EmployeeAPI.Services.EmployeeDOA
             }
         }
 
-       
+        public async Task DeleteEmployee(string id)
+        {
+            try
+            {
+                using (var conn = Connection)
+                {
+                    DynamicParameters parameter = new DynamicParameters();
+                    parameter.Add("EmployeeID", id);
+                    parameter.Add("Return_Val", dbType: System.Data.DbType.Int32, direction: System.Data.ParameterDirection.ReturnValue);
+                     await conn.ExecuteAsync("[procedure]", parameter, commandType: System.Data.CommandType.StoredProcedure);
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message + ":" + ex.StackTrace, ex);
+                
+            }
+        }
     }
 }

@@ -15,5 +15,8 @@ namespace EmployeeAPI.Services.EmployeeDOA
         public Task<Result<Employee>> RetrieveAllEmployees(int pageNo, int pageSize, Employee queryParams);
 
         public Task UpdateEmployee(Employee employee);
+
+        //Delete Employee
+        public Task DeleteEmployee(string id);
     }
 }
