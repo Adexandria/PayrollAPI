@@ -8,12 +8,12 @@ namespace EmployeeAPI.Model
     public class Address
     {
         //required
-        public Guid AddressId { get; set; }
+        public Guid AddressID { get; set; }
         //required
-        public string AddressBox1 { get; set; }
+        public string Address_Box1 { get; set; }
         //optional
-        public string AddressBox2 { get; set; }
+        public string Address_Box2 { get; set; }
         //foreign key
-        public Guid EmployeeId { get; set; }
+        public Guid EmployeeID { get; set; }
     }
 }
