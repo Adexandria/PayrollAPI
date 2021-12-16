@@ -30,6 +30,7 @@ namespace EmployeeAPI.Services
             var secret = new SymmetricSecurityKey(key);
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
         }
+
         public JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials,Employee employee)
         {
             var _jwtSettings = GetSection();

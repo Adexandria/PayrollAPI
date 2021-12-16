@@ -13,8 +13,8 @@ namespace EmployeeAPI.Profiles
         public UserProfile()
         {
             CreateMap<Signup, Employee>();
-            CreateMap<Login, Employee>();
-             
+
+            CreateMap<Login, Employee>();             
         }
     }
 }

@@ -20,6 +20,12 @@ namespace EmployeeAPI.Model
 
         public string Home_Address { get; set; }
 
+        public string Bank_Name { get; set; }
+
+        public string Account_Name { get; set; }
+
+        public string Account_Number { get; set; }
+
         public string Modified_By { get; set; }
         
 

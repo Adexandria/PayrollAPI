@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EmployeeAPI.DAO;
 using EmployeeAPI.Model;
 using EmployeeAPI.Model.Authentication;
 using EmployeeAPI.Model.Settings;
@@ -20,11 +21,11 @@ namespace EmployeeAPI.Controllers
     {
         private readonly IPasswordHasher<Employee> passwordHasher;
         private readonly Credentials _credentials;
-        private readonly IEmployee _employee;
+        private readonly IEmployeeDAO _employee;
         private readonly IMapper mapper;
 
 
-        public AccountController( IPasswordHasher<Employee> passwordHasher, Credentials _credentials, IEmployee _employee, IMapper mapper)
+        public AccountController( IPasswordHasher<Employee> passwordHasher, Credentials _credentials, IEmployeeDAO _employee, IMapper mapper)
         {
             this.passwordHasher = passwordHasher;
             this._credentials = _credentials;
@@ -33,7 +34,7 @@ namespace EmployeeAPI.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<ActionResult> SignUp(Signup newUser)
+        public async Task<IActionResult> SignUp(Signup newUser)
         {
             try
             {
@@ -60,20 +61,18 @@ namespace EmployeeAPI.Controllers
 
         }
 
-
         [HttpPost("login")]
         public ActionResult Login(Login user)
         {
             try
             {
-                var currentEmployee = _employee.GetEmployee(user.Email);
+                var currentEmployee = _employee.RetrieveEmployeeByEmail(user.Email);
                 if (currentEmployee == null) return NotFound("Username doesn't exist");
 
                 //This verfies the user password by using IPasswordHasher interface
                 var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentEmployee, currentEmployee.Password, user.Password);
                 if (passwordVerifyResult.ToString() == "Success")
-                {
-                   
+                {                   
                     var signingCredentials = _credentials.GetSigningCredentials();
                     var tokenOptions = _credentials.GenerateTokenOptions(signingCredentials, currentEmployee);
                     var token = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
@@ -90,12 +89,13 @@ namespace EmployeeAPI.Controllers
             }
 
         }
+
         [HttpGet("{id}/password/reset")]
-        public async Task<ActionResult> ResetPassword(Guid id,ResetPassword reset)
+        public async Task<IActionResult> ResetPassword(Guid id, ResetPassword reset)
         {
             try
             {
-                var currentEmployee = _employee.GetEmployeeById(id);
+                var currentEmployee = _employee.RetrieveEmployeeById(id);
                 if (currentEmployee == null) return NotFound("username doesn't exist");
                 var passwordVerifyResult = passwordHasher.VerifyHashedPassword(currentEmployee, currentEmployee.Password, reset.OldPassword);
                 if (passwordVerifyResult.ToString() != "Success")
@@ -118,7 +118,7 @@ namespace EmployeeAPI.Controllers
         {
             try
             {
-                var currentUser = _employee.GetEmployeeById(id);
+                var currentUser = _employee.RetrieveEmployeeById(id);
                 if (currentUser == null) return NotFound("username doesn't exist");
                 if(this.User.Identity.IsAuthenticated)
                 {
